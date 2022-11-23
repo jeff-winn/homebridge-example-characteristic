@@ -6,13 +6,14 @@ A couple things to mention:
 - The ```MyCustomCharacteristics``` class does nothing aside from maintain the available types of characteristics in your project.
   - It is not necessary, you can reference your characteristic directly by using ```CustomDuration``` if you choose.
 - The ```ExamplePlatformAccessory``` makes use of the ```CustomDuration``` characteristic and adds it to the ```LightBulb``` service.
+- Your custom characteristic will **NOT** be visible within the Apple Home app. You will need a 3rd party app (such as Eve or Controller for HomeKit) to view it.
 
 The custom characteristic defined in this project is documented below:
 ```typescript
 import { Characteristic } from 'hap-nodejs';
 
 export class CustomDuration extends Characteristic {
-  public static readonly UUID = 'b1c8b5a4-ad47-44c4-a50d-18f4bc92737b';
+  public static readonly UUID: string = 'b1c8b5a4-ad47-44c4-a50d-18f4bc92737b';
 
   constructor() {
     super('Custom Duration', CustomDuration.UUID, {
@@ -25,4 +26,4 @@ export class CustomDuration extends Characteristic {
 ```
 The big difference here is the ```Characteristic``` type exported from homebridge cannot be used for your own implementation. You **MUST** import ```Characteristic``` directly from hap-nodejs which actually defines it.
 
-Also, the static readonly UUID field shown above should be unique to every characteristic. Do **NOT** use the value mentioned above, you should generate your own.
+Also, the static readonly UUID field shown above **MUST** be unique to every characteristic. Do **NOT** use the value mentioned above, you should generate your own.
