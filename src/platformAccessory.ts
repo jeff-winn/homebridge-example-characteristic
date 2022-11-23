@@ -1,5 +1,5 @@
-import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
-import { CustomCharacteristics } from './customCharacteristics';
+import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
+import { MyCustomCharacteristics } from './myCustomCharacteristics';
 
 import { ExampleHomebridgePlatform } from './platform';
 
@@ -24,7 +24,6 @@ export class ExamplePlatformAccessory {
     private readonly platform: ExampleHomebridgePlatform,
     private readonly accessory: PlatformAccessory,
   ) {
-
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
       .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Default-Manufacturer')
       .setCharacteristic(this.platform.Characteristic.Model, 'Default-Model')
@@ -39,17 +38,23 @@ export class ExamplePlatformAccessory {
       .onSet(this.setBrightness.bind(this));       // SET - bind to the 'setBrightness` method below
 
     // *******************************************************************
-    // THIS IS THE CUSTOM CHARACTERISTIC BEING USED
+    // THIS IS THE CUSTOM CHARACTERISTIC BEING SETUP
     // *******************************************************************
-    if (this.service.testCharacteristic(CustomCharacteristics.My)) {
+    if (this.service.testCharacteristic(MyCustomCharacteristics.CustomDuration)) {
       // The characteristic already exists on the service, use it.
-      this.service.getCharacteristic(CustomCharacteristics.My).onGet(this.getCustomValue.bind(this));
+      this.service.getCharacteristic(MyCustomCharacteristics.CustomDuration)
+        .onGet(this.getCustomValue.bind(this));   // GET - bind to the 'getCustomValue' method below.
     } else {
       // The characteristic does not already exist on the service, add it and then use it.
-      this.service.addCharacteristic(CustomCharacteristics.My).onGet(this.getCustomValue.bind(this));
+      this.service.addCharacteristic(MyCustomCharacteristics.CustomDuration)
+        .onGet(this.getCustomValue.bind(this));   // GET - bind to the 'getCustomValue' method below.
     }
   }
 
+  /**
+   * This is the method that gets bound to the custom duration characteristic.
+   * @returns The custom duration.
+   */
   getCustomValue(): CharacteristicValue {
     // This method can work like any other method to get the characteristic value.
     return 1000;
