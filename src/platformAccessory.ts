@@ -1,5 +1,5 @@
-import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
-import { MyCustomCharacteristics } from './myCustomCharacteristics';
+import { API, CharacteristicEventTypes, CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
+import { attachCustomDurationCharacteristic } from './characteristics/customDuration';
 
 import { ExampleHomebridgePlatform } from './platform';
 
@@ -22,6 +22,7 @@ export class ExamplePlatformAccessory {
 
   constructor(
     private readonly platform: ExampleHomebridgePlatform,
+    private readonly api: API,
     private readonly accessory: PlatformAccessory,
   ) {
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
@@ -40,15 +41,8 @@ export class ExamplePlatformAccessory {
     // *******************************************************************
     // THIS IS THE CUSTOM CHARACTERISTIC BEING SETUP
     // *******************************************************************
-    if (this.service.testCharacteristic(MyCustomCharacteristics.CustomDuration)) {
-      // The characteristic already exists on the service, use it.
-      this.service.getCharacteristic(MyCustomCharacteristics.CustomDuration)
-        .onGet(this.getCustomValue.bind(this));   // GET - bind to the 'getCustomValue' method below.
-    } else {
-      // The characteristic does not already exist on the service, add it and then use it.
-      this.service.addCharacteristic(MyCustomCharacteristics.CustomDuration)
-        .onGet(this.getCustomValue.bind(this));   // GET - bind to the 'getCustomValue' method below.
-    }
+    attachCustomDurationCharacteristic(this.service, this.api)
+      .on(CharacteristicEventTypes.GET, this.getCustomValue.bind(this));   // GET - bind to the 'getCustomValue' method below.
   }
 
   /**

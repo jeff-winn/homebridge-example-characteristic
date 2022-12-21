@@ -1,19 +1,34 @@
-import { Characteristic, Formats, Units, Perms } from 'hap-nodejs';
+import { API, Characteristic, Formats, Perms, Service, Units } from 'homebridge';
 
 /**
- * Defines the custom duration characteristic.
+ * Defines the display name of the characteristic.
  */
-export class CustomDuration extends Characteristic {
-  /**
-   * You need to generate a new UUID for each characteristic.
-   */
-  public static readonly UUID = 'b1c8b5a4-ad47-44c4-a50d-18f4bc92737b';
+const DISPLAY_NAME = 'Custom Duration';
 
-  constructor() {
-    super('Custom Duration', CustomDuration.UUID, {
+/**
+ * Defines the UUID of the characteristic.
+ * @remarks You need to generate a new UUID for each characteristic.
+ */
+const UUID = 'b1c8b5a4-ad47-44c4-a50d-18f4bc92737b';
+
+/**
+ * Attaches the 'Custom Duration' characteristic to the service.
+ * @param target The service to which the characteristic should be attached.
+ * @param api The Homebridge {@link API} instance in use for the plug-in.
+ * @returns The {@link Characteristic} instance.
+ */
+export function attachCustomDurationCharacteristic(target: Service, api: API): Characteristic {
+  let result: Characteristic;
+
+  if (target.testCharacteristic(DISPLAY_NAME)) {
+    result = target.getCharacteristic(DISPLAY_NAME)!;
+  } else {
+    result = target.addCharacteristic(new api.hap.Characteristic(DISPLAY_NAME, UUID, {
       format: Formats.UINT32,
       perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
       unit: Units.SECONDS,
-    });
+    }));
   }
+
+  return result;
 }
