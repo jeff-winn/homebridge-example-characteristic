@@ -5,7 +5,7 @@ A couple things to mention:
 - `Custom Duration` is the custom characteristic exposed by [customDuration.ts](src/characteristics/customDuration.ts)
   - Because Homebridge does not expose the `Characteristic` type from `hap-nodejs` and Homebridge also signals a warning when directly referencing `hap-nodejs` as a dependency you will need to use the hap instance passed into your plug-in constructor.
   - The characteristic can then be attached to any Homebridge service instance.
-- The `ExamplePlatformAccessory` makes use of the `Custom Duration` characteristic and adds it to the `LightBulb` service.
+- The [platformAccessory.ts](src/platformAccessory.ts#L44) makes use of the `Custom Duration` characteristic and attaches it to the `LightBulb` service.
 - Your custom characteristic will **NOT** be visible within the Apple Home app. You will need a 3rd party app (such as Eve or Controller for HomeKit) to view it.
 
 The function below demonstrates the mechanism to attach a custom characteristic:
